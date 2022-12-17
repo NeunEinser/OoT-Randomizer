@@ -81,7 +81,6 @@ class World(object):
 
         self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or self.spawn_positions
         self.disable_trade_revert = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.adult_trade_shuffle
-        self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
         self.skip_child_zelda = 'Zeldas Letter' not in settings.shuffle_child_trade and \
                                 'Zeldas Letter' in self.distribution.starting_items
         self.selected_adult_trade_item = ''
