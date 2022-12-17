@@ -405,6 +405,10 @@ void draw_gi_song_notes(z64_game_t *game, uint32_t draw_id) {
     z64_gfx_t *gfx = game->common.gfx;
     colorRGBA8_t env_color = item_draw_table[draw_id].args[1].color;
 
+    if (item_draw_table[draw_id].args[2].dlist) {
+        scale_sys_matrix(1.5f, 1.5f, 1.5f, 1);
+    }
+
     append_setup_dl_25_to_xlu(gfx);
     gSPMatrix(gfx->poly_xlu.p++, append_sys_matrix(gfx), G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
     gDPSetEnvColor(gfx->poly_xlu.p++, env_color.r, env_color.g, env_color.b, env_color.a);
