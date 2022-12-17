@@ -856,10 +856,25 @@ def get_shop_message_id_set(shop_items):
     return ids
 
 # remove all messages that easy to tell are unused to create space in the message index table
-def remove_unused_messages(messages):
-    messages[:] = [m for m in messages if not m.is_id_message()]
+def remove_unused_messages(messages, world):
+    messages[:] = [m for m in messages if not m.is_id_message() and not is_removed_cs_message(m.id, world)]
     for index, m in enumerate(messages):
         m.index = index
+
+# remove some messages from removed cutscenes to make more space
+def is_removed_cs_message(id, world):
+    if world.settings.skip_some_minigame_phases and id == 0x6042: #horseback archery 2
+        return True
+    
+    # lines in this order:
+    # Zelda escape CS
+    # Zelda teaching SoT
+    # LACS
+    if (id >= 0x2019 and id <= 0x201e) or id == 0x202f \
+        or id in (0x2005, 0x2008, 0x2009) \
+        or (id >= 0x705a and id <= 0x7067) or (id >= 0x707b and id <= 0x7087):
+        return True
+    return False
 
 # takes all messages used for shop items, and moves messages from the 00xx range into the unused 80xx range
 def move_shop_item_messages(messages, shop_items):

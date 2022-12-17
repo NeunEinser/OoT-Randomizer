@@ -1674,7 +1674,7 @@ def patch_rom(spoiler:Spoiler, world:World, rom:Rom):
 
     # Load Message and Shop Data
     messages = read_messages(rom)
-    remove_unused_messages(messages)
+    remove_unused_messages(messages, world)
     shop_items = read_shop_items(rom, shop_item_file.start + 0x1DEC)
 
     # Set Big Poe count to get reward from buyer
