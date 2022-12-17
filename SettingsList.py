@@ -4402,37 +4402,28 @@ setting_infos = [
     ),
     Combobox(
         name           = 'shuffle_child_trade',
-        gui_text       = 'Shuffle Child Trade Item',
-        default        = 'vanilla',
+        multiple_select= True,
+        gui_text       = 'Shuffled Child Trade Sequence Items',
+        default        = [],
         choices        = {
-            'vanilla':          'Vanilla Locations',
-            'shuffle':          'Shuffle Weird Egg',
-            'skip_child_zelda': 'Skip Child Zelda',
+            'Weird Egg':     'Weird Egg',
+            'Chicken':       'Chicken',
+            'Zeldas Letter': "Zelda's Letter",
+            'Keaton Mask':   'Keaton Mask',
+            'Skull Mask':    'Skull Mask',
+            'Spooky Mask':   'Spooky Mask',
+            'Bunny Hood':    'Bunny Hood',
+            'Goron Mask':    'Goron Mask',
+            'Zora Mask':     'Zora Mask',
+            'Gerudo Mask':   'Gerudo Mask',
+            'Mask of Truth': 'Mask of Truth',
         },
         gui_tooltip    = '''\
-            This changes the beginning of the child trade quest.
+            Select the items to shuffle in the child trade sequence.
 
-            'Vanilla Locations': Weird Egg is found from Malon outside
-            of Hyrule Castle and the child trade quest continues normally.
-
-            'Shuffle Weird Egg': The Weird Egg is shuffled into the item pool
-            and Malon gives a randomized item. This will require finding the
-            Weird Egg to talk to Zelda in Hyrule Castle, which in turn locks
-            rewards from Impa, Saria, Malon, and Talon, as well as the Happy
-            Mask sidequest.
-
-            'Skip Child Zelda': Start having already met Zelda and obtained
-            Zelda's Letter along with the item from Impa.
-            Supersedes "Skip Child Stealth" since the whole sequence is skipped.
+            To skip Child Zelda, do not shuffle Zelda's Letter and
+            add it as a starting item.
         ''',
-        gui_params     = {
-            'randomize_key': 'randomize_settings',
-            'distribution':  [
-                ('vanilla', 1),
-                ('shuffle', 1),
-                ('skip_child_zelda', 1),
-            ],
-        },
         shared         = True,
     ),
     Combobox(
@@ -4607,13 +4598,13 @@ setting_infos = [
         },
     ),
     Checkbutton(
-        name           = 'shuffle_medigoron_carpet_salesman',
-        gui_text       = 'Shuffle Medigoron & Carpet Salesman',
+        name           = 'shuffle_expensive_merchants',
+        gui_text       = 'Shuffle Expensive Merchants',
         gui_tooltip    = '''\
-            Enabling this adds a Giant's Knife and a pack of Bombchus
-            to the item pool and changes both Medigoron and the
-            Haunted Wasteland Carpet Salesman to sell a random item
-            once at the price of 200 Rupees.
+            Enabling this adds a Giant's Knife and a pack of Bombchus 
+            to the item pool and changes Medigoron, Granny's Potion Shop,
+            and the Haunted Wasteland Carpet Salesman to sell a random
+            item once at the same price as their vanilla items.
         ''',
         default        = False,
         shared         = True,
@@ -5249,6 +5240,7 @@ setting_infos = [
             '30_skulltulas':  'House of Skulltula: 30',
             '40_skulltulas':  'House of Skulltula: 40',
             '50_skulltulas':  'House of Skulltula: 50',
+            'mask_shop':  'Shuffled Mask Shop',
         },
         gui_tooltip    = '''\
             This setting adds some hints at locations
@@ -5283,6 +5275,11 @@ setting_infos = [
             Talking to a cursed House of Skulltula
             resident will tell you the reward they will
             give you for removing their curse.
+
+            If shuffled, right side items in the mask
+            shop will be visible but not obtainable
+            before completing the child trade quest.
+            Mask of Truth's shelf slot is always visible.
         ''',
         shared         = True,
         default        = ['altar', 'ganondorf', 'warp_songs'],
@@ -5498,18 +5495,29 @@ setting_infos = [
         ''',
         shared         = True,
     ),
+    Checkbutton(
+        name           = 'adult_trade_shuffle',
+        gui_text       = 'Shuffle All Adult Trade Items',
+        gui_tooltip    = '''\
+            Shuffle all adult trade sequence items. If disabled,
+            a random item will be selected, and Anju will always
+            give an item even if Pocket Egg is not shuffled.
+        ''',
+        shared         = True,
+        default        = False,
+    ),
     Combobox(
         name           = 'adult_trade_start',
         multiple_select= True,
         gui_text       = 'Adult Trade Sequence Items',
-        default        = ['Pocket Egg', 'Pocket Cucco', 'Cojiro', 'Odd Mushroom', 'Poachers Saw',
+        default        = ['Pocket Egg', 'Pocket Cucco', 'Cojiro', 'Odd Mushroom', 'Odd Potion', 'Poachers Saw',
                           'Broken Sword', 'Prescription', 'Eyeball Frog', 'Eyedrops', 'Claim Check'],
         choices        = {
             'Pocket Egg':   'Pocket Egg',
             'Pocket Cucco': 'Pocket Cucco',
             'Cojiro':       'Cojiro',
             'Odd Mushroom': 'Odd Mushroom',
-            #'Odd Potion':   'Odd Potion',
+            'Odd Potion':   'Odd Potion',
             'Poachers Saw': "Poacher's Saw",
             'Broken Sword': 'Broken Sword',
             'Prescription': 'Prescription',
@@ -5518,8 +5526,7 @@ setting_infos = [
             'Claim Check':  'Claim Check',
         },
         gui_tooltip    = '''\
-            Select the items that can appear to start the adult trade sequence.
-            If none are selected, it will function as if all are selected.
+            Select the items to shuffle in the adult trade sequence.
         ''',
         shared         = True,
     ),

@@ -9,6 +9,7 @@ from Goals import Goal, GoalCategory
 from HintList import getRequiredHints, misc_item_hint_table, misc_location_hint_table
 from Hints import HintArea, hint_dist_keys, HintDistFiles
 from Item import ItemFactory, ItemInfo, MakeEventItem
+from ItemPool import child_trade_items
 from Location import Location, LocationFactory
 from LocationList import business_scrubs, location_groups, location_table
 from Plandomizer import InvalidFileException
@@ -79,7 +80,21 @@ class World(object):
         self.mixed_pools_bosses = settings.shuffle_bosses == 'full' and 'Boss' in settings.mix_entrance_pools
 
         self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or self.spawn_positions
-        self.disable_trade_revert = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances
+        self.disable_trade_revert = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.adult_trade_shuffle
+        self.ensure_tod_access = self.shuffle_interior_entrances or settings.shuffle_overworld_entrances or settings.spawn_positions
+        self.skip_child_zelda = 'Zeldas Letter' not in settings.shuffle_child_trade and \
+                                'Zeldas Letter' in self.distribution.starting_items
+        self.selected_adult_trade_item = ''
+        self.adult_trade_starting_inventory = ''
+
+        if (
+            settings.open_forest == 'closed'
+            and (
+                self.shuffle_special_interior_entrances or settings.shuffle_overworld_entrances
+                or settings.warp_songs or settings.spawn_positions or (settings.shuffle_bosses != 'off')
+            )
+        ):
+            self.settings.open_forest = 'closed_deku'
 
         if settings.triforce_goal_per_world > settings.triforce_count_per_world:
             raise ValueError("Triforces required cannot be more than the triforce count.")
@@ -188,7 +203,7 @@ class World(object):
         self.added_hint_types = {}
         self.item_added_hint_types = {}
         self.hint_exclusions = set()
-        if settings.shuffle_child_trade == 'skip_child_zelda':
+        if self.skip_child_zelda:
             self.hint_exclusions.add('Song from Impa')
         self.hint_type_overrides = {}
         self.item_hint_type_overrides = {}
