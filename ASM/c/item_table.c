@@ -6,7 +6,7 @@
 #include "z64.h"
 
 #define ITEM_ROW( \
-        base_item_id_, chest_type_, action_id_, collectible_,  text_id_, object_id_, graphic_id_, \
+        base_item_id_, chest_type_, action_id_, collectible_, text_id_, object_id_, graphic_id_, \
         upgrade_, effect_, effect_arg1_, effect_arg2_) \
     { .base_item_id = base_item_id_, .chest_type = chest_type_, .action_id = action_id_, \
       .collectible = collectible_, .text_id = text_id_, .object_id = object_id_, .graphic_id = graphic_id_, \
@@ -217,19 +217,19 @@ item_row_t item_table[] = {
     [0x00B9] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00E4, 0x00CD, 0x1E, no_upgrade, give_magic,        -1, -1), // Magic Meter
     [0x00BA] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00E8, 0x00CD, 0x1F, no_upgrade, give_double_magic, -1, -1), // Double Magic
 
-    [0x00BB] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0073, 0x0198, 0x78, no_upgrade, give_song, 6, -1 ), // Minuet of Forest
-    [0x00BC] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0074, 0x0198, 0x79, no_upgrade, give_song, 7, -1 ), // Bolero of Fire
-    [0x00BD] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0075, 0x0198, 0x7A, no_upgrade, give_song, 8, -1 ), // Serenade of Water
-    [0x00BE] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0076, 0x0198, 0x7B, no_upgrade, give_song, 9, -1 ), // Requiem of Spirit
-    [0x00BF] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0077, 0x0198, 0x7C, no_upgrade, give_song, 10, -1), // Nocturn of Shadow
-    [0x00C0] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0078, 0x0198, 0x7D, no_upgrade, give_song, 11, -1), // Prelude of Light
+    [0x00BB] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0073, 0x0196, 0x78, no_upgrade, give_quest_item, 6, -1 ), // Minuet of Forest
+    [0x00BC] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0074, 0x0196, 0x79, no_upgrade, give_quest_item, 7, -1 ), // Bolero of Fire
+    [0x00BD] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0075, 0x0196, 0x7A, no_upgrade, give_quest_item, 8, -1 ), // Serenade of Water
+    [0x00BE] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0076, 0x0196, 0x7B, no_upgrade, give_quest_item, 9, -1 ), // Requiem of Spirit
+    [0x00BF] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0077, 0x0196, 0x7C, no_upgrade, give_quest_item, 10, -1), // Nocturne of Shadow
+    [0x00C0] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0078, 0x0196, 0x7D, no_upgrade, give_quest_item, 11, -1), // Prelude of Light
 
-    [0x00C1] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D4, 0x00B6, 0x04, no_upgrade, give_song, 12, -1), // Zelda's Lullaby
-    [0x00C2] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D2, 0x00B6, 0x06, no_upgrade, give_song, 13, -1), // Epona's Song
-    [0x00C3] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D1, 0x00B6, 0x03, no_upgrade, give_song, 14, -1), // Saria's Song
-    [0x00C4] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D3, 0x00B6, 0x08, no_upgrade, give_song, 15, -1), // Sun's Song
-    [0x00C5] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D5, 0x00B6, 0x05, no_upgrade, give_song, 16, -1), // Song of Time
-    [0x00C6] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D6, 0x00B6, 0x07, no_upgrade, give_song, 17, -1), // Song of Storms
+    [0x00C1] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D4, 0x00B6, 0x04, no_upgrade, give_quest_item, 12, -1), // Zelda's Lullaby
+    [0x00C2] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D2, 0x00B6, 0x06, no_upgrade, give_quest_item, 13, -1), // Epona's Song
+    [0x00C3] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D1, 0x00B6, 0x03, no_upgrade, give_quest_item, 14, -1), // Saria's Song
+    [0x00C4] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D3, 0x00B6, 0x08, no_upgrade, give_quest_item, 15, -1), // Sun's Song
+    [0x00C5] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D5, 0x00B6, 0x05, no_upgrade, give_quest_item, 16, -1), // Song of Time
+    [0x00C6] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00D6, 0x00B6, 0x07, no_upgrade, give_quest_item, 17, -1), // Song of Storms
 
     [0x00C7] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x00F8, 0x00D1, 0x23, no_upgrade, give_tycoon_wallet, 3, -1), // Tycoon's Wallet
     [0x00C8] = ITEM_ROW(0x53,      GILDED_CHEST, 0x14, -1, 0x9099, 0x010B, 0x45, no_upgrade, no_effect, -1, -1), // Redundant Letter Bottle
@@ -246,59 +246,69 @@ item_row_t item_table[] = {
     [0x00D2] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, -1, 0x9017, 0x0195, 0x77, no_upgrade, give_small_key_ring, FORT_ID,   -1), // Gerudo Fortress Small Key Ring
     [0x00D3] = ITEM_ROW(0x53,      SILVER_CHEST, 0x41, -1, 0x9018, 0x0195, 0x77, no_upgrade, give_small_key_ring, CASTLE_ID, -1), // Ganon's Castle Small Key Ring
 
-    [0x00D4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9019, 0x0196, 0x72, no_upgrade, give_silver_rupee, DODONGO_ID, 0x00), // Silver Rupee (Dodongos Cavern Staircase)
-    [0x00D5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901A, 0x0196, 0x72, no_upgrade, give_silver_rupee, ICE_ID,     0x01), // Silver Rupee (Ice Cavern Spinning Scythe)
-    [0x00D6] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901B, 0x0196, 0x72, no_upgrade, give_silver_rupee, ICE_ID,     0x02), // Silver Rupee (Ice Cavern Push Block)
-    [0x00D7] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901C, 0x0196, 0x72, no_upgrade, give_silver_rupee, BOTW_ID,    0x03), // Silver Rupee (Bottom of the Well Basement)
-    [0x00D8] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901D, 0x0196, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x04), // Silver Rupee (Shadow Temple Scythe Shortcut)
-    [0x00D9] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901E, 0x0196, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x05), // Silver Rupee (Shadow Temple Invisible Blades)
-    [0x00DA] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901F, 0x0196, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x06), // Silver Rupee (Shadow Temple Huge Pit)
-    [0x00DB] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9020, 0x0196, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x07), // Silver Rupee (Shadow Temple Invisible Spikes)
-    [0x00DC] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9021, 0x0196, 0x72, no_upgrade, give_silver_rupee, GTG_ID,     0x08), // Silver Rupee (Gerudo Training Ground Slopes)
-    [0x00DD] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9022, 0x0196, 0x72, no_upgrade, give_silver_rupee, GTG_ID,     0x09), // Silver Rupee (Gerudo Training Ground Lava)
-    [0x00DE] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9023, 0x0196, 0x72, no_upgrade, give_silver_rupee, GTG_ID,     0x0A), // Silver Rupee (Gerudo Training Ground Water)
-    [0x00DF] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9024, 0x0196, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0B), // Silver Rupee (Spirit Temple Child Early Torches)
-    [0x00E0] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9025, 0x0196, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0C), // Silver Rupee (Spirit Temple Adult Boulders)
-    [0x00E1] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9026, 0x0196, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0D), // Silver Rupee (Spirit Temple Lobby and Lower Adult)
-    [0x00E2] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9027, 0x0196, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0E), // Silver Rupee (Spirit Temple Sun Block)
-    [0x00E3] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9028, 0x0196, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0F), // Silver Rupee (Spirit Temple Adult Climb)
-    [0x00E4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9029, 0x0196, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x10), // Silver Rupee (Ganons Castle Spirit Trial)
-    [0x00E5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902A, 0x0196, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x11), // Silver Rupee (Ganons Castle Light Trial)
-    [0x00E6] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902B, 0x0196, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x12), // Silver Rupee (Ganons Castle Fire Trial)
-    [0x00E7] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902C, 0x0196, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x13), // Silver Rupee (Ganons Castle Shadow Trial)
-    [0x00E8] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902D, 0x0196, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x14), // Silver Rupee (Ganons Castle Water Trial)
-    [0x00E9] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902E, 0x0196, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x15), // Silver Rupee (Ganons Castle Forest Trial)
+    [0x00D4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9019, 0x0197, 0x72, no_upgrade, give_silver_rupee, DODONGO_ID, 0x00), // Silver Rupee (Dodongos Cavern Staircase)
+    [0x00D5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901A, 0x0197, 0x72, no_upgrade, give_silver_rupee, ICE_ID,     0x01), // Silver Rupee (Ice Cavern Spinning Scythe)
+    [0x00D6] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901B, 0x0197, 0x72, no_upgrade, give_silver_rupee, ICE_ID,     0x02), // Silver Rupee (Ice Cavern Push Block)
+    [0x00D7] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901C, 0x0197, 0x72, no_upgrade, give_silver_rupee, BOTW_ID,    0x03), // Silver Rupee (Bottom of the Well Basement)
+    [0x00D8] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901D, 0x0197, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x04), // Silver Rupee (Shadow Temple Scythe Shortcut)
+    [0x00D9] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901E, 0x0197, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x05), // Silver Rupee (Shadow Temple Invisible Blades)
+    [0x00DA] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x901F, 0x0197, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x06), // Silver Rupee (Shadow Temple Huge Pit)
+    [0x00DB] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9020, 0x0197, 0x72, no_upgrade, give_silver_rupee, SHADOW_ID,  0x07), // Silver Rupee (Shadow Temple Invisible Spikes)
+    [0x00DC] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9021, 0x0197, 0x72, no_upgrade, give_silver_rupee, GTG_ID,     0x08), // Silver Rupee (Gerudo Training Ground Slopes)
+    [0x00DD] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9022, 0x0197, 0x72, no_upgrade, give_silver_rupee, GTG_ID,     0x09), // Silver Rupee (Gerudo Training Ground Lava)
+    [0x00DE] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9023, 0x0197, 0x72, no_upgrade, give_silver_rupee, GTG_ID,     0x0A), // Silver Rupee (Gerudo Training Ground Water)
+    [0x00DF] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9024, 0x0197, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0B), // Silver Rupee (Spirit Temple Child Early Torches)
+    [0x00E0] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9025, 0x0197, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0C), // Silver Rupee (Spirit Temple Adult Boulders)
+    [0x00E1] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9026, 0x0197, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0D), // Silver Rupee (Spirit Temple Lobby and Lower Adult)
+    [0x00E2] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9027, 0x0197, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0E), // Silver Rupee (Spirit Temple Sun Block)
+    [0x00E3] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9028, 0x0197, 0x72, no_upgrade, give_silver_rupee, SPIRIT_ID,  0x0F), // Silver Rupee (Spirit Temple Adult Climb)
+    [0x00E4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x9029, 0x0197, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x10), // Silver Rupee (Ganons Castle Spirit Trial)
+    [0x00E5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902A, 0x0197, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x11), // Silver Rupee (Ganons Castle Light Trial)
+    [0x00E6] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902B, 0x0197, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x12), // Silver Rupee (Ganons Castle Fire Trial)
+    [0x00E7] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902C, 0x0197, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x13), // Silver Rupee (Ganons Castle Shadow Trial)
+    [0x00E8] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902D, 0x0197, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x14), // Silver Rupee (Ganons Castle Water Trial)
+    [0x00E9] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x85, -1, 0x902E, 0x0197, 0x72, no_upgrade, give_silver_rupee, CASTLE_ID,  0x15), // Silver Rupee (Ganons Castle Forest Trial)
 
-    [0x00EA] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x902F, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, DODONGO_ID, 0x00), // Silver Rupee Pouch (Dodongos Cavern Staircase)
-    [0x00EB] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9030, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, ICE_ID,     0x01), // Silver Rupee Pouch (Ice Cavern Spinning Scythe)
-    [0x00EC] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9031, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, ICE_ID,     0x02), // Silver Rupee Pouch (Ice Cavern Push Block)
-    [0x00ED] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9032, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, BOTW_ID,    0x03), // Silver Rupee Pouch (Bottom of the Well Basement)
-    [0x00EE] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9033, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x04), // Silver Rupee Pouch (Shadow Temple Scythe Shortcut)
-    [0x00EF] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9034, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x05), // Silver Rupee Pouch (Shadow Temple Invisible Blades)
-    [0x00F0] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9035, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x06), // Silver Rupee Pouch (Shadow Temple Huge Pit)
-    [0x00F1] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9036, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x07), // Silver Rupee Pouch (Shadow Temple Invisible Spikes)
-    [0x00F2] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9037, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, GTG_ID,     0x08), // Silver Rupee Pouch (Gerudo Training Ground Slopes)
-    [0x00F3] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9038, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, GTG_ID,     0x09), // Silver Rupee Pouch (Gerudo Training Ground Lava)
-    [0x00F4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9039, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, GTG_ID,     0x0A), // Silver Rupee Pouch (Gerudo Training Ground Water)
-    [0x00F5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903A, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0B), // Silver Rupee Pouch (Spirit Temple Child Early Torches)
-    [0x00F6] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903B, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0C), // Silver Rupee Pouch (Spirit Temple Adult Boulders)
-    [0x00F7] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903C, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0D), // Silver Rupee Pouch (Spirit Temple Lobby and Lower Adult)
-    [0x00F8] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903D, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0E), // Silver Rupee Pouch (Spirit Temple Sun Block)
-    [0x00F9] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903E, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0F), // Silver Rupee Pouch (Spirit Temple Adult Climb)
-    [0x00FA] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903F, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x10), // Silver Rupee Pouch (Ganons Castle Spirit Trial)
-    [0x00FB] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9040, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x11), // Silver Rupee Pouch (Ganons Castle Light Trial)
-    [0x00FC] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9041, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x12), // Silver Rupee Pouch (Ganons Castle Fire Trial)
-    [0x00FD] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9042, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x13), // Silver Rupee Pouch (Ganons Castle Shadow Trial)
-    [0x00FE] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9043, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x14), // Silver Rupee Pouch (Ganons Castle Water Trial)
-    [0x00FF] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9044, 0x0196, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x15), // Silver Rupee Pouch (Ganons Castle Forest Trial)
+    [0x00EA] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x902F, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, DODONGO_ID, 0x00), // Silver Rupee Pouch (Dodongos Cavern Staircase)
+    [0x00EB] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9030, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, ICE_ID,     0x01), // Silver Rupee Pouch (Ice Cavern Spinning Scythe)
+    [0x00EC] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9031, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, ICE_ID,     0x02), // Silver Rupee Pouch (Ice Cavern Push Block)
+    [0x00ED] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9032, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, BOTW_ID,    0x03), // Silver Rupee Pouch (Bottom of the Well Basement)
+    [0x00EE] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9033, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x04), // Silver Rupee Pouch (Shadow Temple Scythe Shortcut)
+    [0x00EF] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9034, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x05), // Silver Rupee Pouch (Shadow Temple Invisible Blades)
+    [0x00F0] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9035, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x06), // Silver Rupee Pouch (Shadow Temple Huge Pit)
+    [0x00F1] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9036, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SHADOW_ID,  0x07), // Silver Rupee Pouch (Shadow Temple Invisible Spikes)
+    [0x00F2] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9037, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, GTG_ID,     0x08), // Silver Rupee Pouch (Gerudo Training Ground Slopes)
+    [0x00F3] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9038, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, GTG_ID,     0x09), // Silver Rupee Pouch (Gerudo Training Ground Lava)
+    [0x00F4] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9039, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, GTG_ID,     0x0A), // Silver Rupee Pouch (Gerudo Training Ground Water)
+    [0x00F5] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903A, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0B), // Silver Rupee Pouch (Spirit Temple Child Early Torches)
+    [0x00F6] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903B, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0C), // Silver Rupee Pouch (Spirit Temple Adult Boulders)
+    [0x00F7] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903C, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0D), // Silver Rupee Pouch (Spirit Temple Lobby and Lower Adult)
+    [0x00F8] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903D, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0E), // Silver Rupee Pouch (Spirit Temple Sun Block)
+    [0x00F9] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903E, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, SPIRIT_ID,  0x0F), // Silver Rupee Pouch (Spirit Temple Adult Climb)
+    [0x00FA] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x903F, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x10), // Silver Rupee Pouch (Ganons Castle Spirit Trial)
+    [0x00FB] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9040, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x11), // Silver Rupee Pouch (Ganons Castle Light Trial)
+    [0x00FC] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9041, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x12), // Silver Rupee Pouch (Ganons Castle Fire Trial)
+    [0x00FD] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9042, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x13), // Silver Rupee Pouch (Ganons Castle Shadow Trial)
+    [0x00FE] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9043, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x14), // Silver Rupee Pouch (Ganons Castle Water Trial)
+    [0x00FF] = ITEM_ROW(0x4D,      SILVER_CHEST, 0x86, -1, 0x9044, 0x0197, 0x72, no_upgrade, give_silver_rupee_pouch, CASTLE_ID,  0x15), // Silver Rupee Pouch (Ganons Castle Forest Trial)
 
-    [0x0100] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x0196, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (pink)
-    [0x0101] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x0197, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (orange)
-    [0x0102] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x0198, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (green)
-    [0x0103] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x0199, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (blue)
+    [0x0100] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x0198, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (pink)
+    [0x0101] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x0199, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (orange)
+    [0x0102] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x019A, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (green)
+    [0x0103] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9045, 0x019B, 0x29, no_upgrade, give_triforce_piece, -1, -1), // Easter egg (blue)
     [0x0104] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9046, 0x0193, 0x76, no_upgrade, give_triforce_piece, -1, -1), // Triforce of Power
     [0x0105] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9047, 0x0193, 0x76, no_upgrade, give_triforce_piece, -1, -1), // Triforce of Wisdom
     [0x0106] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x9049, 0x0193, 0x76, no_upgrade, give_triforce_piece, -1, -1), // Triforce of Courage
+
+    [0x0107] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0080, 0x0193, 0x76, no_upgrade, give_quest_item, 18, -1), // Kokiri Emerald
+    [0x0108] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0081, 0x0193, 0x76, no_upgrade, give_quest_item, 19, -1), // Goron Ruby
+    [0x0109] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0082, 0x0193, 0x76, no_upgrade, give_quest_item, 20, -1), // Zora Sapphire
+    [0x010A] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0040, 0x0193, 0x76, no_upgrade, give_quest_item, 5, -1), // Light Medallion
+    [0x010B] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x003E, 0x0193, 0x76, no_upgrade, give_quest_item, 0, -1), // Forest Medallion
+    [0x010C] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x003C, 0x0193, 0x76, no_upgrade, give_quest_item, 1, -1), // Fire Medallion
+    [0x010D] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x003D, 0x0193, 0x76, no_upgrade, give_quest_item, 2, -1), // Water Medallion
+    [0x010E] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x0041, 0x0193, 0x76, no_upgrade, give_quest_item, 4, -1), // Shadow Medallion
+    [0x010F] = ITEM_ROW(0x53,      GILDED_CHEST, 0x41, -1, 0x003F, 0x0193, 0x76, no_upgrade, give_quest_item, 3, -1), // Spirit Medallion
 };
 
 item_row_t *get_item_row(uint16_t item_id) {

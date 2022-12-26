@@ -467,6 +467,7 @@ def get_pool_core(world):
     remain_shop_items = []
     ruto_bottles = 1
     blue_potions = 1
+    num_extra_dungeon_items = 0
 
     if world.settings.zora_fountain == 'open':
         ruto_bottles = 0
@@ -533,13 +534,14 @@ def get_pool_core(world):
         pending_junk_pool.extend(ludicrous_health)
 
     if world.settings.triforce_hunt:
-        if world.settings.triforce_hunt_mode == 'easter_egg_hunt':
-            pending_junk_pool.extend(eggs * (world.settings.triforce_count_per_world // len(eggs)))
-            pending_junk_pool.extend(eggs[:world.settings.triforce_count_per_world % len(eggs)])
+        if world.settings.triforce_hunt_mode == 'normal':
+            pending_junk_pool.extend(['Triforce Piece'] * world.triforce_count_per_world)
+        elif world.settings.triforce_hunt_mode == 'easter_egg_hunt':
+            pending_junk_pool.extend(eggs * (world.triforce_count_per_world // len(eggs)))
+            pending_junk_pool.extend(eggs[:world.triforce_count_per_world % len(eggs)])
         elif world.settings.triforce_hunt_mode == 'blitz':
             pending_junk_pool.extend(triforce_blitz_items)
-        else:
-            pending_junk_pool.extend(['Triforce Piece'] * world.settings.triforce_count_per_world)
+        # Ice% is handled below
 
     # Use the vanilla items in the world's locations when appropriate.
     for location in world.get_locations():
@@ -554,6 +556,15 @@ def get_pool_core(world):
                                       'Deliver Letter', 'Time Travel', 'Bombchu Drop']
                 or location.type == 'Drop'):
             shuffle_item = False
+
+        # Ice%
+        elif location.vanilla_item == 'Iron Boots':
+            if world.settings.triforce_hunt_mode == 'ice_percent':
+                pending_junk_pool.append(item)
+                item = 'Triforce Piece'
+                shuffle_item = False
+            else:
+                shuffle_item = world.settings.shuffle_base_item_pool
 
         # Gold Skulltula Tokens
         elif location.vanilla_item == 'Gold Skulltula Token':
@@ -750,6 +761,30 @@ def get_pool_core(world):
                 shuffle_item = False
                 location.disabled = DisableType.DISABLED
 
+        # Dungeon Rewards
+        elif location.type == 'Boss':
+            if world.settings.shuffle_dungeon_rewards in ('vanilla', 'reward'):
+                shuffle_item = world.settings.shuffle_dungeon_rewards != 'vanilla'
+            else:
+                #TODO allow any item to be placed on a dungeon reward location, then shuffle normally
+                placed_items[location.name] = 'Light Medallion'
+                if location.vanilla_item != 'Light Medallion':
+                    dungeon_name = {
+                        'Kokiri Emerald': 'Deku Tree',
+                        'Goron Ruby': 'Dodongos Cavern',
+                        'Zora Sapphire': 'Jabu Jabus Belly',
+                        'Forest Medallion': 'Forest Temple',
+                        'Fire Medallion': 'Fire Temple',
+                        'Water Medallion': 'Water Temple',
+                        'Shadow Medallion': 'Shadow Temple',
+                        'Spirit Medallion': 'Spirit Temple',
+                    }[location.vanilla_item]
+                    dungeon = [dungeon for dungeon in world.dungeons if dungeon.name == dungeon_name][0]
+                    dungeon.reward.append(ItemFactory(item))
+                    num_extra_dungeon_items += 1
+                    if world.settings.shuffle_dungeon_rewards in ('any_dungeon', 'overworld', 'regional'):
+                        dungeon.reward[-1].priority = True
+
         # Dungeon Items
         elif location.dungeon is not None:
             dungeon = location.dungeon
@@ -893,7 +928,7 @@ def get_pool_core(world):
     world.distribution.alter_pool(world, pool)
 
     # Make sure our pending_junk_pool is empty. If not, remove some random junk here.
-    if pending_junk_pool:
+    if pending_junk_pool or num_extra_dungeon_items:
         for item in set(pending_junk_pool):
             # Ensure pending_junk_pool contents don't exceed values given by distribution file
             if item in world.distribution.item_pool:
@@ -918,6 +953,15 @@ def get_pool_core(world):
             junk_candidates.remove(junk_item)
             pool.remove(junk_item)
             pool.append(pending_item)
+
+        for i in range(num_extra_dungeon_items):
+            # make room in the item pool for additional dungeon items, which aren't tracked as part of pending_junk_pool
+            #TODO remove this hack once normal items can be on dungeon reward locations
+            if not junk_candidates:
+                raise RuntimeError(f'Not enough junk exists in item pool for {num_extra_dungeon_items - i} dungeon items to be added.')
+            junk_item = random.choice(junk_candidates)
+            junk_candidates.remove(junk_item)
+            pool.remove(junk_item)
 
     if world.settings.item_pool_value == 'ludicrous':
         # Replace all junk items with major items

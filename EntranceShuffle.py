@@ -421,11 +421,8 @@ class EntranceShuffleError(ShuffleError):
 
 # Set entrances of all worlds, first initializing them to their default regions, then potentially shuffling part of them
 def set_entrances(worlds, savewarps_to_connect):
-    for world in worlds:
-        world.initialize_entrances()
-
     for savewarp, replaces in savewarps_to_connect:
-        savewarp.replaces = world.get_entrance(replaces)
+        savewarp.replaces = savewarp.world.get_entrance(replaces)
         savewarp.connect(savewarp.replaces.connected_region)
 
     for world in worlds:
@@ -1028,7 +1025,7 @@ def validate_world(world, worlds, entrance_placed, locations_to_ensure_reachable
 
     if (
         world.shuffle_interior_entrances and (
-            (world.dungeon_rewards_hinted and world.mixed_pools_bosses) or #TODO also enable if boss reward shuffle is on
+            (world.dungeon_rewards_hinted and (world.mixed_pools_bosses or world.settings.shuffle_dungeon_rewards in ('regional', 'overworld', 'anywhere'))) or
             any(hint_type in world.settings.misc_hints for hint_type in misc_item_hint_table) or world.settings.hints != 'none'
         ) and (entrance_placed == None or entrance_placed.type in ['Interior', 'SpecialInterior'])
     ):

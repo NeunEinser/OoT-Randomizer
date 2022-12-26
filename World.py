@@ -95,9 +95,18 @@ class World(object):
         ):
             self.settings.open_forest = 'closed_deku'
 
-        if settings.triforce_goal_per_world > settings.triforce_count_per_world:
+        if settings.triforce_hunt_mode == 'ice_percent':
+            self.triforce_count_per_world = 1
+            self.triforce_goal_per_world = 1
+        elif settings.triforce_hunt_mode == 'blitz':
+            self.triforce_count_per_world = 3
+            self.triforce_goal_per_world = 3
+        else:
+            self.triforce_count_per_world = settings.triforce_count_per_world
+            self.triforce_goal_per_world = settings.triforce_goal_per_world
+        if self.triforce_goal_per_world > self.triforce_count_per_world:
             raise ValueError("Triforces required cannot be more than the triforce count.")
-        self.triforce_goal = settings.triforce_goal_per_world * settings.world_count
+        self.triforce_goal = self.triforce_goal_per_world * settings.world_count
 
         if settings.triforce_hunt:
             # Pin shuffle_ganon_bosskey to 'triforce' when triforce_hunt is enabled
@@ -193,10 +202,10 @@ class World(object):
                 if not all(sub_key in sub_keys for sub_key in self.hint_dist_user['distribution'][key]):
                     hint_dist_valid = False
         if not hint_dist_valid:
-            raise InvalidFileException("""Hint distributions require all hint types be present in the distro 
+            raise InvalidFileException("""Hint distributions require all hint types be present in the distro
                                           (trial, always, dual_always, woth, barren, item, song, overworld, dungeon, entrance,
                                           sometimes, dual, random, junk, named-item, goal). If a hint type should not be
-                                          shuffled, set its order to 0. Hint type format is \"type\": { 
+                                          shuffled, set its order to 0. Hint type format is \"type\": {
                                           \"order\": 0, \"weight\": 0.0, \"fixed\": 0, \"copies\": 0 }""")
 
         self.added_hint_types = {}
@@ -671,41 +680,6 @@ class World(object):
                         location.item.price = price
 
 
-    rewardlist = (
-        'Kokiri Emerald',
-        'Goron Ruby',
-        'Zora Sapphire',
-        'Forest Medallion',
-        'Fire Medallion',
-        'Water Medallion',
-        'Spirit Medallion',
-        'Shadow Medallion',
-        'Light Medallion'
-    )
-    def fill_bosses(self, bossCount=9):
-        boss_rewards = ItemFactory(self.rewardlist, self)
-        boss_locations = [self.get_location(loc) for loc in location_groups['Boss']]
-
-        placed_prizes = [loc.item.name for loc in boss_locations if loc.item is not None]
-        unplaced_prizes = [item for item in boss_rewards if item.name not in placed_prizes]
-        empty_boss_locations = [loc for loc in boss_locations if loc.item is None]
-        prizepool = list(unplaced_prizes)
-        prize_locs = list(empty_boss_locations)
-
-        bossCount -= self.distribution.fill_bosses(self, prize_locs, prizepool)
-
-        while bossCount:
-            bossCount -= 1
-            random.shuffle(prizepool)
-            random.shuffle(prize_locs)
-            loc = prize_locs.pop()
-            if self.settings.shuffle_dungeon_rewards == 'vanilla':
-                item = next(item for item in prizepool if item.name == location_table[loc.name][4])
-                prizepool.remove(item)
-            elif self.settings.shuffle_dungeon_rewards == 'reward':
-                item = prizepool.pop()
-            self.push_item(loc, item)
-
     def set_goals(self):
         # Default goals are divided into 3 primary categories:
         # Bridge, Ganon's Boss Key, and Trials
@@ -736,10 +710,10 @@ class World(object):
         b = GoalCategory('rainbow_bridge', 10, lock_entrances=['Ganons Castle Ledge -> Ganons Castle Lobby'])
         gbk = GoalCategory('ganon_bosskey', 20)
         trials = GoalCategory('trials', 30, minimum_goals=1)
-        th = GoalCategory('triforce_hunt', 30, goal_count=round(self.settings.triforce_goal_per_world / 10), minimum_goals=1)
+        th = GoalCategory('triforce_hunt', 30, goal_count=round(self.triforce_goal_per_world / 10), minimum_goals=1)
         trial_goal = Goal(self, 'the Tower', 'path to #the Tower#', 'White', items=[], create_empty=True)
 
-        if self.settings.triforce_hunt and self.settings.triforce_goal_per_world > 0:
+        if self.settings.triforce_hunt and self.triforce_goal_per_world > 0:
             # "Hintable" value of False means the goal items themselves cannot
             # be hinted directly. This is used for Triforce Hunt and Skull
             # conditions to restrict hints to useful items instead of the win
@@ -750,8 +724,16 @@ class World(object):
             # Key, which makes these items directly hintable in their respective goals
             # assuming they do not get hinted by another hint type (always, woth with
             # an earlier order in the hint distro, etc).
-            path_name = 'the bunny' if self.settings.triforce_hunt_mode == 'easter_egg_hunt' else 'gold'
-            th.add_goal(Goal(self, path_name, f'path of #{path_name}#', 'Yellow', items=[{'name': 'Triforce Piece', 'quantity': self.settings.triforce_count_per_world, 'minimum': self.settings.triforce_goal_per_world, 'hintable': False}]))
+            if self.settings.triforce_hunt_mode == 'easter_egg_hunt':
+                path_name = 'the bunny'
+                path_color = 'Yellow'
+            elif self.settings.triforce_hunt_mode == 'ice_percent':
+                path_name = 'ice'
+                path_color = 'Light Blue'
+            else: #TODO add Triforce Blitz goals as defaults?
+                path_name = 'gold'
+                path_color = 'Yellow'
+            th.add_goal(Goal(self, path_name, f'path of #{path_name}#', path_color, items=[{'name': 'Triforce Piece', 'quantity': self.triforce_count_per_world, 'minimum': self.triforce_goal_per_world, 'hintable': False}]))
             self.goal_categories[th.name] = th
         # Category goals are defined for each possible setting for each category.
         # Bridge can be Stones, Medallions, Dungeons, Skulls, or Vanilla.
@@ -1042,27 +1024,32 @@ class World(object):
         itempool = []
 
         if self.settings.shuffle_mapcompass == 'dungeon':
-            itempool.extend([item for dungeon in self.dungeons for item in dungeon.dungeon_items])
-        elif self.settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items])
+            itempool.extend(item for dungeon in self.dungeons for item in dungeon.dungeon_items)
+        elif self.settings.shuffle_mapcompass in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items)
 
         if self.settings.shuffle_smallkeys == 'dungeon':
-            itempool.extend([item for dungeon in self.dungeons for item in dungeon.small_keys])
-        elif self.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys])
+            itempool.extend(item for dungeon in self.dungeons for item in dungeon.small_keys)
+        elif self.settings.shuffle_smallkeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys)
 
         if self.settings.shuffle_bosskeys == 'dungeon':
-            itempool.extend([item for dungeon in self.dungeons if dungeon.name != 'Ganons Castle' for item in dungeon.boss_key])
-        elif self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.boss_key])
+            itempool.extend(item for dungeon in self.dungeons if dungeon.name != 'Ganons Castle' for item in dungeon.boss_key)
+        elif self.settings.shuffle_bosskeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.boss_key)
 
         if self.settings.shuffle_ganon_bosskey == 'dungeon':
-            itempool.extend([item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key])
+            itempool.extend(item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key)
 
         if self.settings.shuffle_silver_rupees == 'dungeon':
-            itempool.extend([item for dungeon in self.dungeons for item in dungeon.silver_rupees])
-        elif self.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'anywhere', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees])
+            itempool.extend(item for dungeon in self.dungeons for item in dungeon.silver_rupees)
+        elif self.settings.shuffle_silver_rupees in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees)
+
+        if self.settings.shuffle_dungeon_rewards == 'dungeon':
+            itempool.extend(item for dungeon in self.dungeons for item in dungeon.reward)
+        elif self.settings.shuffle_dungeon_rewards in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.reward)
 
         for item in itempool:
             item.world = self
@@ -1072,16 +1059,18 @@ class World(object):
     # get a list of items that don't have to be in their proper dungeon
     def get_unrestricted_dungeon_items(self):
         itempool = []
-        if self.settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items])
-        if self.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys])
-        if self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if (dungeon.name != 'Ganons Castle' and not self.empty_dungeons[dungeon.name].empty) for item in dungeon.boss_key])
-        if self.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key])
-        if self.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'anywhere', 'regional']:
-            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees])
+        if self.settings.shuffle_mapcompass in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items)
+        if self.settings.shuffle_smallkeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys)
+        if self.settings.shuffle_bosskeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if (dungeon.name != 'Ganons Castle' and not self.empty_dungeons[dungeon.name].empty) for item in dungeon.boss_key)
+        if self.settings.shuffle_ganon_bosskey in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key)
+        if self.settings.shuffle_silver_rupees in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees)
+        if self.settings.shuffle_dungeon_rewards in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
+            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.reward)
 
         for item in itempool:
             item.world = self
@@ -1174,7 +1163,7 @@ class World(object):
     # set collected to know this. To simplify this we instead just get areas
     # that don't have any items that could ever be required in any seed.
     # We further cull this list with woth info. This is an overestimate of
-    # the true list of possible useless areas, but this will generate a 
+    # the true list of possible useless areas, but this will generate a
     # reasonably sized list of areas that fit this property.
     def update_useless_areas(self, spoiler):
         areas = {}

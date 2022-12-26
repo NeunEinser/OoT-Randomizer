@@ -112,7 +112,7 @@ INITIAL_SAVE_DATA:
 EXTENDED_INITIAL_SAVE_DATA:
 .endarea
 
-.area 0x40, 0 ; size must be at least 8 * ((max object_id parameter Patches.add_to_extended_object_table is called with) - 0x192)
+.area 0x48, 0 ; size must be at least 8 * ((max object_id parameter Patches.add_to_extended_object_table is called with) - 0x192)
 EXTENDED_OBJECT_TABLE:
 .endarea
 
@@ -167,6 +167,8 @@ POTCRATE_TEXTURES_MATCH_CONTENTS:
 SHUFFLE_SILVER_RUPEES:
 .byte 0x00
 CFG_DUNGEON_INFO_SILVER_RUPEES:
+.byte 0x00
+ICE_PERCENT:
 .byte 0x00
 .align 4
 

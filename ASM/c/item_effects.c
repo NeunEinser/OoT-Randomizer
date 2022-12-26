@@ -6,11 +6,6 @@
 #define rupee_cap ((uint16_t*)0x800F8CEC)
 volatile uint8_t MAX_RUPEES = 0;
 
-typedef void (*commit_scene_flags_fn)(z64_game_t* game_ctxt);
-#define commit_scene_flags ((commit_scene_flags_fn)0x8009D894)
-typedef void (*save_game_fn)(void* unk);
-#define save_game ((save_game_fn)0x800905D4)
-
 void no_effect(z64_file_t *save, int16_t arg1, int16_t arg2) {
 }
 
@@ -186,7 +181,7 @@ void give_fairy_ocarina(z64_file_t *save, int16_t arg1, int16_t arg2) {
     save->items[Z64_SLOT_OCARINA] = 0x07;
 }
 
-void give_song(z64_file_t *save, int16_t quest_bit, int16_t arg2) {
+void give_quest_item(z64_file_t *save, int16_t quest_bit, int16_t arg2) {
     save->quest_items |= 1 << quest_bit;
 }
 

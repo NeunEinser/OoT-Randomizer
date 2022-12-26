@@ -11,17 +11,17 @@ This branch is available to use online at <https://ootrandomizer.com/generatorDe
 Differences between this branch and [Dev-R](https://github.com/Roman971/OoT-Randomizer/tree/Dev-R) (on Roman's fork):
 
 * New settings and options:
+  * Work-in-progress “Shuffle Dungeon Rewards” setting ([#1833](https://github.com/TestRunnerSRL/OoT-Randomizer/issues/1833))
+  * New “Shuffle Gerudo Valley River Exit” setting ([#1830](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1830))
   * New “Shuffle Silver Rupees” setting ([#1814](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1814))
-  * New “Triforce Hunt Mode” setting with “Normal”, “Easter Egg Hunt”, and “Triforce Blitz” options (based on [#1804](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1804) and [Elagatua's `Dev` branch](https://github.com/Elagatua/OoT-Randomizer/tree/Dev))
+  * New “Triforce Hunt Mode” setting with “Normal”, “Easter Egg Hunt”, “Ice%”, and “Triforce Blitz” options (Easter Egg Hunt based on [#1804](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1804), Triforce Blitz based on [Elagatua's `Dev` branch](https://github.com/Elagatua/OoT-Randomizer/tree/Dev))
   * New “Shuffle Thieves' Hideout Entrances” setting ([#1616](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1616))
   * New “Open Deku Tree” setting separate from “Open Forest” ([#1536](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1536))
   * “Closed Forest Requires Gohma” is a separate setting, making “Closed Forest” compatible with more settings if disabled ([#1531](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1531))
   * New “Full” options for the settings “Randomize Owl Drops”, “Randomize Warp Song Destinations”, and “Randomize Overworld Spawns” (which is split into “Randomize Child Overworld Spawn” and “Randomize Adult Overworld Spawn” for this reason) that include more types of entrances (based on [#1179](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1179) and [#1287](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1287))
-  * New “Shuffle Gerudo Valley River Exit” setting
   * New “Shuffle Blue Warps” setting
   * New “Mutually Exclusive One-Ways” setting which makes the hint area restriction apply to one-way entrances of different types
   * New “Vanilla” option for the “Shuffle Songs” setting
-  * New “Shuffle Dungeon Rewards” setting with “Vanilla Locations” and “Dungeon Reward Locations” options
   * New “Shuffle Other Items” setting which can be disabled to generate vanilla seeds, only shuffle entrances, etc.
   * New “Bosses” option for the “Mix Entrance Pools” setting (based on [#1820](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1820))
   * New “Mixed Pools Tournament” and “Triforce Blitz” hint distributions
@@ -33,16 +33,18 @@ Differences between this branch and [Dev-R](https://github.com/Roman971/OoT-Rand
   * “Vanilla (Master Quest)” and “Fast Vanilla (Master Quest)” are “Vanilla” and “Fast Vanilla” but with all dungeons from Master Quest. Since logic for vanilla MQ hasn't been coded yet, these use no logic.
   * “Fenhl's Casual” is my preferred flavor of playing OoTR, with everything shuffled, full entrance randomizer, chaos hints, warp song note shuffle, half damage, no Master Quest, and no tricks enabled. The rainbow bridge requires all dungeon rewards and Ganon's boss key requires all 100 gold skulltula tokens.
   * “Mixed Pools Tournament”, the settings used for a tournament that had full mixed pools entrance randomizer. Note that the tournament itself used [a previous version](https://ootrandomizer.com/generatorDev?version=devFenhl_6.2.100) of this branch.
+  * “Ice%”, the preliminary settings used for an upcoming tournament where the goal is to reac the Iron Boots chest.
   * The set of “Standard Anti-Weekly Settings” presets disables every location that's enabled in “Standard Weekly (Latest)” and enables every location that's disabled there, as well as changing some miscellaneous settings. See [the official document](https://docs.google.com/document/d/1sbL6Zju943F5qyx4QbTLUsqZqOTMmvqKVbDwJl08SGc/edit) for details.
     * “Standard Anti-Weekly Settings (Beginner)” omits “Shuffle Rupees & Hearts”, “Shuffle Pots”, “Shuffle Crates”, and “Shuffle Beehives”, and keeps the balanced item pool.
     * “Standard Anti-Weekly Settings (Advanced)” includes those shuffle settings, has a minimal item pool, and adds extra ice traps.
     * “Standard Anti-Weekly Settings (S6)” is the inverse of “S6 Tournament” instead of weekly settings. It otherwise resembles the beginner preset. The only differences are open Deku, vanilla child spawn, and tournament hint distribution.
-  * “Triforce Blitz” is a fast-paced game mode with very powerful hints. See [the official website](https://www.triforceblitz.com/) for details. Differences from the official branch include each Triforce piece having its own distinct text box, and the starting song not being counted for goal counts.
+  * “Triforce Blitz” is a fast-paced game mode with very powerful hints. See [the official website](https://www.triforceblitz.com/) for details. Note that this currently still based on the settings for Triforce Blitz season 1. Differences from the official branch include each Triforce piece having its own distinct text box (as in Triforce Blitz season 2), and the starting song not being counted for goal counts.
 * Other changes:
   * Some settings have been renamed for clarity ([#1560](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1560))
   * Opening the Door of Time is a separate goal category when required by the settings ([#1529](https://github.com/TestRunnerSRL/OoT-Randomizer/pull/1529))
   * Gold Skulltula Tokens can be on excluded locations if there are no checks requiring them (such as in SAWS)
   * With “Closed Forest Requires Gohma” enabled, items that can be used to escape the forest won't appear in the forest.
+  * Dungeon rewards are shuffled after plando'd items, reducing generation failures.
   * The setting “Randomize Main Rule Settings” has been removed due to being too difficult to maintain across Dev and Dev-R updates. <https://github.com/fenhl/plando-random-settings> can be used instead.
 
 Differences between Dev-R and the main Dev branch (on [Testrunner's Fork](https://github.com/TestRunnerSRL/OoT-Randomizer/tree/Dev)):
@@ -158,6 +160,15 @@ issue. You should always Hard Reset to avoid this issue entirely.
 ## Changelog
 
 ### Dev
+
+#### Bug Fixes
+* Fix an issue where the `path of hearts` goal wasn't enabled in certain circumstances with a Ganon's Boss Key or LACS `Hearts` goal.
+
+#### Other Changes
+* `Closed Forest` is no longer changed to `Closed Deku` when `Shuffle Boss Entrances` is enabled.
+* A new model is now used for warp songs to differentiate from non-warp songs.
+* The model used for Ruto's Letter is now rotated onto its side to better differentiate from other bottles.
+* The dummy boss key chest on the wall of Forest Temple's twisted hallway now matches the real version of the chest in the straightened version of the room.
 
 ### 7.1
 

@@ -155,7 +155,7 @@ logic_tricks = {
                     '''},
     'Fewer Tunic Requirements': {
         'name'    : 'logic_fewer_tunic_requirements',
-        'tags'    : ("General", "Fire Temple", "Fire Temple MQ", "Water Temple", "Water Temple MQ", "Gerudo Training Ground", "Gerudo Training Ground MQ", 
+        'tags'    : ("General", "Fire Temple", "Fire Temple MQ", "Water Temple", "Water Temple MQ", "Gerudo Training Ground", "Gerudo Training Ground MQ",
                     "Zora's Fountain", "Death Mountain Crater", "Master Quest", "Overworld", "Vanilla Dungeons", "Child", "Adult",),
         'tooltip' : '''\
                     Allows the following possible without Tunics:
@@ -590,9 +590,9 @@ logic_tricks = {
                     To cross the river of sand with no additional items,
                     be sure to also enable "Wasteland Crossing without
                     Hover Boots or Longshot".
-                    Unless all overworld entrances are randomized, child
-                    Link will not be expected to do anything at Gerudo's
-                    Fortress.
+                    Unless Thieves' Hideout entrances or all overworld
+                    entrances are randomized, child Link will not be
+                    expected to do anything at Gerudo's Fortress.
                     '''},
     'Colossus Hill GS with Hookshot': {
         'name'    : 'logic_colossus_gs',
@@ -2354,6 +2354,7 @@ setting_infos = [
         choices        = {
             'normal':          'Normal',
             'easter_egg_hunt': 'Easter Egg Hunt',
+            'ice_percent':     'Ice%',
             'blitz':           'Triforce Blitz',
         },
         gui_tooltip    = '''\
@@ -2361,12 +2362,16 @@ setting_infos = [
             Easter Eggs instead. This is just cosmetic and has the
             same gameplay as normal Triforce Hunt.
 
+            'Ice%': A single piece of the Triforce is placed in the
+            Iron Boots chest at the end of the Ice Cavern.
+
             'Triforce Blitz': Find the Triforce pieces of Power,
             Wisdom, and Courage to beat the game. They can only be
             found inside dungeons.
         ''',
         shared         = True,
         disable        = {
+            'ice_percent': {'settings': ['triforce_count_per_world', 'triforce_goal_per_world', 'shuffle_base_item_pool']},
             'blitz': {'settings': ['triforce_count_per_world', 'triforce_goal_per_world']},
         },
     ),
@@ -2374,7 +2379,6 @@ setting_infos = [
         name           = 'triforce_count_per_world',
         gui_text       = 'Triforces Per World',
         default        = 30,
-        disabled_default = 3, # for Triforce Blitz
         min            = 1,
         max            = 999,
         shared         = True,
@@ -2398,7 +2402,6 @@ setting_infos = [
         name           = 'triforce_goal_per_world',
         gui_text       = 'Required Triforces Per World',
         default        = 20,
-        disabled_default = 3, # for Triforce Blitz
         min            = 1,
         max            = 999,
         shared         = True,
@@ -2423,7 +2426,7 @@ setting_infos = [
             'vanilla':    "Vanilla",
             'stones':     "Stones",
             'medallions': "Medallions",
-            'dungeons':   "Dungeons",
+            'dungeons':   "Dungeon Rewards",
             'tokens':     "Tokens",
             'hearts':     "Hearts",
         },
@@ -2434,7 +2437,7 @@ setting_infos = [
             'Vanilla': Shadow and Spirit Medallions.
             'Stones': A configurable amount of Spiritual Stones.
             'Medallions': A configurable amount of Medallions.
-            'Dungeons': A configurable amount of Dungeon Rewards.
+            'Dungeon Rewards': A configurable amount of Dungeon Rewards.
             'Tokens': A configurable amount of Gold Skulltula Tokens.
             'Hearts': A configurable amount of hearts.
         ''',
@@ -2553,7 +2556,7 @@ setting_infos = [
             'vanilla':    'Vanilla Requirements',
             'stones':     'Spiritual Stones',
             'medallions': 'Medallions',
-            'dungeons':   'Dungeons',
+            'dungeons':   'Dungeon Rewards',
             'tokens':     'Gold Skulltula Tokens',
             'hearts':     'Hearts',
             'random':     'Random'
@@ -2563,7 +2566,7 @@ setting_infos = [
             'Vanilla Requirements': Spirit/Shadow Medallions and Light Arrows.
             'Spiritual Stones': A configurable amount of Spiritual Stones.
             'Medallions': A configurable amount of Medallions.
-            'Dungeons': A configurable amount of Dungeon Rewards.
+            'Dungeon Rewards': A configurable amount of Dungeon Rewards.
             'Gold Skulltula Tokens': A configurable amount of Gold Skulltula Tokens.
             'Hearts': A configurable amount of hearts.
             'Random': A random Rainbow Bridge requirement excluding Gold Skulltula Tokens.
@@ -2718,7 +2721,7 @@ setting_infos = [
             'on_lacs':         "Light Arrow Cutscene",
             'stones':          "Stones",
             'medallions':      "Medallions",
-            'dungeons':        "Dungeons",
+            'dungeons':        "Dungeon Rewards",
             'tokens':          "Tokens",
             'hearts':          "Hearts",
         },
@@ -2754,7 +2757,7 @@ setting_infos = [
             'Medallions': Ganon's Castle Boss Key will be awarded
             when reaching the target number of Medallions.
 
-            'Dungeons': Ganon's Castle Boss Key will be awarded
+            'Dungeon Rewards': Ganon's Castle Boss Key will be awarded
             when reaching the target number of Dungeon Rewards.
 
             'Tokens': Ganon's Castle Boss Key will be awarded
@@ -2873,8 +2876,13 @@ setting_infos = [
         gui_text       = 'Shuffle Dungeon Rewards',
         default        = 'reward',
         choices        = {
-            'vanilla': 'Vanilla Locations',
-            'reward':  'Dungeon Reward Locations',
+            'vanilla':     'Vanilla Locations',
+            'reward':      'Dungeon Reward Locations',
+            'dungeon':     'Own Dungeon',
+            'regional':    'Regional',
+            'overworld':   'Overworld Only',
+            'any_dungeon': 'Any Dungeon',
+            'anywhere':    'Anywhere',
         },
         gui_tooltip    = '''\
             This controls where Medallions and Spiritual Stones can
@@ -2888,6 +2896,34 @@ setting_infos = [
             of boss rooms, but not necessarily the boss's vanilla
             reward. In Multiworld, dungeon rewards will only appear
             in their own world.
+
+            <b>The following options are in early development, and
+            come with some limitations:</b> The starting dungeon reward
+            currently can't be shuffled. Dungeon reward locations will
+            hold a copy of the starting reward. Shuffled dungeon rewards
+            will appear as Triforce Pieces. If you receive the last
+            required medallion for the Burning Kakariko cutscene while
+            already in Kakariko, the cutscene doesn't play until you
+            leave and reenter Kakariko (or enter and exit a building).
+
+            'Own Dungeon': Each dungeon reward appears in its respective
+            dungeon, but not necessarily on the boss. If boss entrances
+            are mixed, boss rooms that aren't in a dungeon can't have
+            dungeon rewards.
+
+            'Regional': Dungeon rewards can only appear in regions
+            near the original dungeon (including the dungeon
+            itself or other dungeons in the region).
+            <a href="https://wiki.ootrandomizer.com/index.php?title=Hints#Hint_Regions" target="_blank">The Wiki has a list of corresponding regions here.</a>
+
+            'Overworld Only': Dungeon rewards can only appear
+            outside of dungeons.
+
+            'Any Dungeon': Dungeon rewards can only appear
+            inside of dungeons.
+
+            'Anywhere': Dungeon rewards can appear anywhere
+            in the world.
         ''',
         gui_params     = {
             'randomize_key': 'randomize_settings',
@@ -6340,9 +6376,9 @@ setting_infos = [
         cosmetic       = True,
         gui_tooltip    = '''\
             Disable standard battle music.
-	        This prevents background music from being
-	        interrupted by the battle theme when being
-	        near enemies.
+            This prevents background music from being
+            interrupted by the battle theme when being
+            near enemies.
         ''',
         default        = False,
     ),

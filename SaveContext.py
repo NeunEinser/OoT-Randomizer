@@ -514,7 +514,7 @@ class SaveContext():
                     'sword'              : Address(0x0048, size=2, mask=0x000F),
                     'shield'             : Address(0x0048, size=2, mask=0x00F0),
                     'tunic'              : Address(0x0048, size=2, mask=0x0F00),
-                    'boots'              : Address(0x0048, size=2, mask=0xF000),                
+                    'boots'              : Address(0x0048, size=2, mask=0xF000),
                 },
             },
             'equips_adult' : {
@@ -533,7 +533,7 @@ class SaveContext():
                     'sword'              : Address(0x0052, size=2, mask=0x000F),
                     'shield'             : Address(0x0052, size=2, mask=0x00F0),
                     'tunic'              : Address(0x0052, size=2, mask=0x0F00),
-                    'boots'              : Address(0x0052, size=2, mask=0xF000),                
+                    'boots'              : Address(0x0052, size=2, mask=0xF000),
                 },
             },
             'unk_06'                     : Address(size=0x12),
@@ -555,7 +555,7 @@ class SaveContext():
                     'sword'              : Address(0x0070, size=2, mask=0x000F, max=3),
                     'shield'             : Address(0x0070, size=2, mask=0x00F0, max=3),
                     'tunic'              : Address(0x0070, size=2, mask=0x0F00, max=3),
-                    'boots'              : Address(0x0070, size=2, mask=0xF000, max=3),                
+                    'boots'              : Address(0x0070, size=2, mask=0xF000, max=3),
                 },
             },
             'unk_07'                     : Address(size=2),
@@ -1036,7 +1036,7 @@ class SaveContext():
         "Bottle with Bugs"         : 'bug',
         "Bottle with Big Poe"      : 'big_poe',
         "Bottle with Milk (Half)"  : 'half_milk',
-        "Bottle with Poe"          : 'poe',    
+        "Bottle with Poe"          : 'poe',
     }
 
 

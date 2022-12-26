@@ -11,6 +11,7 @@ extern uint8_t FAST_CHESTS;
 extern uint8_t OCARINAS_SHUFFLED;
 extern uint8_t NO_COLLECTIBLE_HEARTS;
 extern uint32_t BOMBCHUS_IN_LOGIC;
+extern uint8_t ICE_PERCENT;
 override_t cfg_item_overrides[1536] = { 0 };
 int item_overrides_count = 0;
 
@@ -37,7 +38,7 @@ uint32_t active_item_object_id = 0;
 uint32_t active_item_graphic_id = 0;
 uint32_t active_item_fast_chest = 0;
 
-uint8_t satisified_pending_frames = 0;
+uint8_t satisfied_pending_frames = 0;
 
 // This table contains the offset (in bytes) of the start of a particular scene/room/setup flag space in collectible_override_flags.
 // Call get_collectible_flag_offset to retrieve the desired offset.
@@ -50,7 +51,7 @@ extern uint16_t CURR_ACTOR_SPAWN_INDEX;
 // Total amount of memory required for each flag table (in bytes).
 uint16_t num_override_flags;
 
-// Pointer to a variable length array that will contain the collectible flags for each scene. 
+// Pointer to a variable length array that will contain the collectible flags for each scene.
 uint8_t *collectible_override_flags;
 
 // Initialize the override flag tables on the heap.
@@ -245,7 +246,13 @@ void push_outgoing_override(override_t *override) {
 
 void move_outgoing_queue() {
     if (OUTGOING_KEY.all == 0) {
-        OUTGOING_ITEM = outgoing_queue[0].value.base.item_id;
+        if (outgoing_queue[0].value.base.item_id >= 0x100 && outgoing_queue[0].value.base.item_id < 0x107) {
+            // Multiworld plugins (at least Bizhawk Shuffler 2 and Mido's House Multiworld) have special cases for Triforce pieces.
+            // To make sure Easter eggs are handled the same way, they're sent as Triforce pieces.
+            OUTGOING_ITEM = 0xCA;
+        } else {
+            OUTGOING_ITEM = outgoing_queue[0].value.base.item_id;
+        }
         OUTGOING_PLAYER = outgoing_queue[0].value.base.player;
         // Set the value first and then the key, so a plugin checking whether the key is present is guaranteed to see the value as well
         OUTGOING_KEY = outgoing_queue[0].key;
@@ -354,13 +361,13 @@ inline uint32_t link_is_ready() {
         (z64_link.state_flags_2 & 0x000C0000) == 0 &&
         (z64_event_state_1 & 0x20) == 0 &&
         (z64_game.camera_2 == 0)) {
-        satisified_pending_frames++;
+        satisfied_pending_frames++;
     }
     else {
-        satisified_pending_frames = 0;
+        satisfied_pending_frames = 0;
     }
-    if (satisified_pending_frames >= 2) {
-        satisified_pending_frames = 0;
+    if (satisfied_pending_frames >= 2) {
+        satisfied_pending_frames = 0;
         return 1;
     }
     return 0;
@@ -441,7 +448,10 @@ void get_item(z64_actor_t *from_actor, z64_link_t *link, int8_t incoming_item_id
 
     if (from_actor->actor_id == 0x0A) {
         // Update chest contents
-        if (override.value.base.item_id == 0x7C && override.value.base.player == PLAYER_ID && (FAST_CHESTS || active_item_fast_chest)) {
+        if (
+            override.value.base.item_id == 0x7C && override.value.base.player == PLAYER_ID && (FAST_CHESTS || active_item_fast_chest)
+            || ICE_PERCENT && override.value.base.item_id == 0xCA
+        ) {
             // Use ice trap base item ID to freeze Link as the chest opens rather than playing the full item get animation
             base_item_id = 0x7C;
         }
@@ -613,7 +623,6 @@ void Item_DropCollectible_Room_Hack(EnItem00 *spawnedActor) {
 z64_actor_t *Item_DropCollectible_Actor_Spawn_Override(void *actorCtx, z64_game_t *globalCtx, int16_t actorId, float posX, float posY, float posZ, int16_t rotX, int16_t rotY, int16_t rotZ, int16_t params) {
     rotY = drop_collectible_override_flag; // Get the override flag
     EnItem00 *spawnedActor = (EnItem00 *)z64_SpawnActor(actorCtx, globalCtx,actorId, posX, posY, posZ, rotX, rotY, rotZ, params); // Spawn the actor
-    drop_collectible_override_flag = 0; // And reset it to 0.
 
     return &(spawnedActor->actor);
 }
@@ -795,7 +804,7 @@ uint8_t item_give_collectible(uint8_t item, z64_link_t *link, z64_actor_t *from_
 
         PLAYER_NAME_ID = player;
 
-        // If it's a collectible item don't do the fanfare music/message box. 
+        // If it's a collectible item don't do the fanfare music/message box.
         if (item_row->collectible >= 0) { // Item is one of our base collectibles
             collectible_mutex = NULL;
             pItem->actor.dropFlag = 1; // Store this so the draw function knows to keep drawing the override.

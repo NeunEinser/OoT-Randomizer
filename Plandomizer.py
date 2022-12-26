@@ -650,12 +650,12 @@ class WorldDistribution(object):
                         raise RuntimeError('Entrance already shuffled in world %d: %s' % (self.id + 1, name))
 
                 target_region = record.region
-                
+
                 matched_targets_to_region = list(filter(lambda target: (target.connected_region and target.connected_region.name == target_region)
-                                                        or (target.reverse and target.reverse.connected_region and target.reverse.connected_region.name == target_region and not target.decoupled), 
+                                                        or (target.reverse and target.reverse.connected_region and target.reverse.connected_region.name == target_region and not target.decoupled),
                                                         target_entrance_pools[pool_type]))
                 if not matched_targets_to_region:
-                    raise RuntimeError('No entrance found to replace with %s that leads to %s in world %d' % 
+                    raise RuntimeError('No entrance found to replace with %s that leads to %s in world %d' %
                                                 (matched_entrance, target_region, self.id + 1))
                 index = 0
                 while index < len(matched_targets_to_region):
@@ -670,14 +670,14 @@ class WorldDistribution(object):
                     try:
                         matched_target = next(filter(lambda target: target.replaces.parent_region.name == target_parent, matched_targets_to_region))
                     except StopIteration:
-                        raise RuntimeError('No entrance found to replace with %s that leads to %s from %s in world %d' % 
+                        raise RuntimeError('No entrance found to replace with %s that leads to %s from %s in world %d' %
                                                 (matched_entrance, target_region, target_parent, self.id + 1))
                 else:
                     matched_target = matched_targets_to_region[0]
                     target_parent = matched_target.parent_region.name
 
                 if matched_target.connected_region == None:
-                    raise RuntimeError('Entrance leading to %s from %s is already shuffled in world %d' % 
+                    raise RuntimeError('Entrance leading to %s from %s is already shuffled in world %d' %
                                             (target_region, target_parent, self.id + 1))
 
                 try:
@@ -685,7 +685,7 @@ class WorldDistribution(object):
                     change_connections(matched_entrance, matched_target)
                     validate_world(matched_entrance.world, worlds, None, locations_to_ensure_reachable, itempool)
                 except EntranceShuffleError as error:
-                    raise RuntimeError('Cannot connect %s To %s in world %d (Reason: %s)' % 
+                    raise RuntimeError('Cannot connect %s To %s in world %d (Reason: %s)' %
                                             (matched_entrance, matched_entrance.connected_region or matched_target.connected_region, self.id + 1, error))
 
                 confirm_replacement(matched_entrance, matched_target)
@@ -769,58 +769,24 @@ class WorldDistribution(object):
             return pull_first_element(pools, lambda e: e.world is world and e.name == name, remove)
 
 
-    def fill_bosses(self, world, prize_locs, prizepool):
-        count = 0
-        used_items = []
-        for (name, record) in self.pattern_dict_items(self.locations):
-            boss = self.pull_item_or_location([prize_locs], world, name)
-            if boss is None:
-                try:
-                    location = LocationFactory(name)
-                except KeyError:
-                    raise RuntimeError('Unknown location in world %d: %r. %s' % (world.id + 1, name, build_close_match(name, 'location')))
-                if location.type == 'Boss':
-                    raise RuntimeError('Boss or already placed in world %d: %s' % (world.id + 1, name))
-                else:
-                    continue
-
-            if record.player is not None and (record.player - 1) != self.id:
-                raise RuntimeError('A boss can only give rewards in its own world')
-
-            valid_items = self.get_valid_items_from_record(prizepool, used_items, record)
-            if valid_items:  # Choices still available in the item pool, choose one, mark it as a used item
-                record.item = random_choices(valid_items)[0]
-                if used_items is not None:
-                    used_items.append(record.item)
-
-            reward = self.pull_item_or_location([prizepool], world, record.item)
-            if reward is None:
-                if record.item not in item_groups['DungeonReward']:
-                    raise RuntimeError('Cannot place non-dungeon reward %s in world %d on location %s.' % (record.item, self.id + 1, name))
-                if IsItem(record.item):
-                    raise RuntimeError('Reward already placed in world %d: %s' % (world.id + 1, record.item))
-                else:
-                    raise RuntimeError('Reward unknown in world %d: %s' % (world.id + 1, record.item))
-            count += 1
-            world.push_item(boss, reward, True)
-        return count
-
     def fill(self, window, worlds, location_pools, item_pools):
         """Fills the world with restrictions defined in a plandomizer JSON distribution file.
 
         :param window:
         :param worlds: A list of the world objects that define the rules of each game world.
         :param location_pools: A list containing all of the location pools.
-            0: Shop Locations
-            1: Song Locations
-            2: Fill locations
+            0: Boss Locations
+            1: Shop Locations
+            2: Song Locations
+            3: Fill locations
         :param item_pools: A list containing all of the item pools.
-            0: Shop Items
-            1: Dungeon Items
-            2: Songs
-            3: Progression Items
-            4: Priority Items
-            5: The rest of the Item pool
+            0: Dungeon Rewards
+            1: Shop Items
+            2: Dungeon Items
+            3: Songs
+            4: Progression Items
+            5: Priority Items
+            6: The rest of the Item pool
         """
         world = worlds[self.id]
         locations = {}
@@ -832,7 +798,7 @@ class WorldDistribution(object):
                 continue
             valid_items = []
             if record.item == "#Vanilla": # Get vanilla item at this location from the location table
-                valid_items.append(location_table[location_name][4]) 
+                valid_items.append(location_table[location_name][4])
             else: # Do normal method of getting valid items for this location
                 valid_items = self.get_valid_items_from_record(world.itempool, used_items, record)
             if not valid_items:
@@ -866,9 +832,6 @@ class WorldDistribution(object):
                 else:
                     raise RuntimeError('Location already filled in world %d: %s' % (self.id + 1, location_name))
 
-            if record.item in item_groups['DungeonReward']:
-                raise RuntimeError('Cannot place dungeon reward %s in world %d in location %s.' % (record.item, self.id + 1, location_name))
-
             if record.item == '#Junk' and location.type == 'Song' and world.settings.shuffle_song_items in ('vanilla', 'song') and not any(name in song_list and record.count for name, record in world.settings.starting_items.items()):
                 record.item = '#JunkSong'
 
@@ -877,10 +840,12 @@ class WorldDistribution(object):
             if is_invert and location.type != 'Song' and world.settings.shuffle_song_items in ('vanilla', 'song'):
                 ignore_pools = [2]
             if is_invert and location.type == 'Song' and world.settings.shuffle_song_items in ('vanilla', 'song'):
-                ignore_pools = [i for i in range(len(item_pools)) if i != 2]
+                ignore_pools = [i for i in range(len(item_pools)) if i != 3]
+            if location.type == 'Boss':
+                ignore_pools = [i for i in range(len(item_pools)) if i != 0]
             # location.price will be None for Shop Buy items
             if location.type == 'Shop' and location.price is None:
-                ignore_pools = [i for i in range(len(item_pools)) if i != 0]
+                ignore_pools = [i for i in range(len(item_pools)) if i != 1]
             else:
                 # Prevent assigning Shop Buy items to non-Shop locations
                 if ignore_pools is None:
@@ -1079,9 +1044,9 @@ class WorldDistribution(object):
             skipped_locations.append('Hideout Gerudo Membership Card')
         if world.settings.empty_dungeons_mode != 'none':
             skipped_locations_from_dungeons = []
-            if True: #TODO dungeon rewards not shuffled
+            if world.settings.shuffle_dungeon_rewards in ('vanilla', 'reward'):
                 skipped_locations_from_dungeons += location_groups['Boss']
-            if world.settings.shuffle_song_items == 'song':
+            if world.settings.shuffle_song_items in ('vanilla', 'song'):
                 skipped_locations_from_dungeons += location_groups['Song']
             elif world.settings.shuffle_song_items == 'dungeon':
                 skipped_locations_from_dungeons += location_groups['BossHeart']
@@ -1204,6 +1169,8 @@ class Distribution(object):
                 if world.skip_child_zelda and 'Song from Impa' in world.distribution.locations and world.distribution.locations['Song from Impa'].item == triforce_piece:
                     total_starting_count += 1
             total_count += world.triforce_count
+            if world.settings.triforce_hunt_mode == 'ice_percent': #TODO instead of hardcoding Ice%, scan filled locations
+                total_count += 1
 
         if total_count < worlds[0].triforce_goal:
             raise RuntimeError('Not enough Triforce Pieces in the worlds. There should be at least %d and there are only %d.' % (worlds[0].triforce_goal, total_count))

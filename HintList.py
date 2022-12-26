@@ -1431,7 +1431,7 @@ hintTable = {
     # - They aren't inappropriate.
     # - They aren't absurdly long copy pastas.
     # - They aren't quotes or references that are simply not funny when out-of-context.
-    # To elaborate on this last point: junk hints need to be able to be understood 
+    # To elaborate on this last point: junk hints need to be able to be understood
     # by everyone, and not just those who get the obscure references.
     # Zelda references are considered fair game.
 
@@ -1682,6 +1682,7 @@ hintTable = {
     'ganonBK_keysanity':                                        ("hidden #anywhere in Hyrule#", None, 'ganonBossKey'),
     'ganonBK_triforce':                                         ("given to the Hero once the #Triforce# is completed", None, 'ganonBossKey'),
     'ganonBK_eggs':                                             ("given to the Hero once enough #Easter Eggs# are found", None, 'ganonBossKey'),
+    'ganonBK_ice':                                              ("guarded by a #monster in a frozen cavern#", "the #final treasure of Ice Cavern#", 'ganonBossKey'),
     'ganonBK_medallions':                                       ("Medallions", None, 'ganonBossKey'),
     'ganonBK_stones':                                           ("Spiritual Stones", None, 'ganonBossKey'),
     'ganonBK_dungeons':                                         ("Spiritual Stones and Medallions", None, 'ganonBossKey'),

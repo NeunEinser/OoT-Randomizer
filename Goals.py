@@ -107,7 +107,7 @@ class GoalCategory(object):
 
 
     def update_reachable_goals(self, starting_search, full_search):
-        # Only reduce goal item quantity if minimum goal requirements are reachable, 
+        # Only reduce goal item quantity if minimum goal requirements are reachable,
         # but not the full goal quantity. Primary use is to identify reachable
         # skull tokens, triforce pieces, and plentiful item duplicates with
         # All Locations Reachable off. Beatable check is required to prevent
@@ -348,7 +348,7 @@ def search_goals(categories, reachable_goals, search, priority_locations, all_lo
 def maybe_set_misc_item_hints(location):
     if not location.item:
         return
-    if location.item.world.dungeon_rewards_hinted and location.item.name in location.item.world.rewardlist:
+    if location.item.world.dungeon_rewards_hinted and location.item.type == 'DungeonReward':
         if location.item.name not in location.item.world.hinted_dungeon_reward_locations:
             location.item.world.hinted_dungeon_reward_locations[location.item.name] = location
             logging.getLogger('').debug(f'{location.item.name} [{location.item.world.id}] set to [{location.name}]')

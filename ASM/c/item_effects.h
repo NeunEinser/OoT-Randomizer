@@ -5,6 +5,11 @@
 #include "icetrap.h"
 #include "triforce.h"
 
+typedef void (*commit_scene_flags_fn)(z64_game_t* game_ctxt);
+#define commit_scene_flags ((commit_scene_flags_fn)0x8009D894)
+typedef void (*save_game_fn)(void* unk);
+#define save_game ((save_game_fn)0x800905D4)
+
 void no_effect(z64_file_t *save, int16_t arg1, int16_t arg2);
 void full_heal(z64_file_t *save, int16_t arg1, int16_t arg2);
 void give_triforce_piece(z64_file_t *save, int16_t arg1, int16_t arg2);
@@ -20,7 +25,7 @@ void give_defense(z64_file_t *save, int16_t arg1, int16_t arg2);
 void give_magic(z64_file_t *save, int16_t arg1, int16_t arg2);
 void give_double_magic(z64_file_t *save, int16_t arg1, int16_t arg2);
 void give_fairy_ocarina(z64_file_t *save, int16_t arg1, int16_t arg2);
-void give_song(z64_file_t *save, int16_t quest_bit, int16_t arg2);
+void give_quest_item(z64_file_t *save, int16_t quest_bit, int16_t arg2);
 void ice_trap_effect(z64_file_t *save, int16_t arg1, int16_t arg2);
 void give_bean_pack(z64_file_t *save, int16_t arg1, int16_t arg2);
 void fill_wallet_upgrade(z64_file_t *save, int16_t arg1, int16_t arg2);
