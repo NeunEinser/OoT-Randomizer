@@ -863,9 +863,6 @@ def remove_unused_messages(messages, world):
 
 # remove some messages from removed cutscenes to make more space
 def is_removed_cs_message(id, world):
-    if world.settings.skip_some_minigame_phases and id == 0x6042: #horseback archery 2
-        return True
-    
     # lines in this order:
     # Zelda escape CS
     # Zelda teaching SoT
