@@ -680,6 +680,41 @@ class World(object):
                         location.item.price = price
 
 
+    rewardlist = (
+        'Kokiri Emerald',
+        'Goron Ruby',
+        'Zora Sapphire',
+        'Forest Medallion',
+        'Fire Medallion',
+        'Water Medallion',
+        'Spirit Medallion',
+        'Shadow Medallion',
+        'Light Medallion'
+    )
+    def fill_bosses(self, bossCount=9):
+        boss_rewards = ItemFactory(self.rewardlist, self)
+        boss_locations = [self.get_location(loc) for loc in location_groups['Boss']]
+
+        placed_prizes = [loc.item.name for loc in boss_locations if loc.item is not None]
+        unplaced_prizes = [item for item in boss_rewards if item.name not in placed_prizes]
+        empty_boss_locations = [loc for loc in boss_locations if loc.item is None]
+        prizepool = list(unplaced_prizes)
+        prize_locs = list(empty_boss_locations)
+
+        bossCount -= self.distribution.fill_bosses(self, prize_locs, prizepool)
+
+        while bossCount:
+            bossCount -= 1
+            random.shuffle(prizepool)
+            random.shuffle(prize_locs)
+            loc = prize_locs.pop()
+            if self.settings.shuffle_dungeon_rewards == 'vanilla':
+                item = next(item for item in prizepool if item.name == location_table[loc.name][4])
+                prizepool.remove(item)
+            elif self.settings.shuffle_dungeon_rewards == 'reward':
+                item = prizepool.pop()
+            self.push_item(loc, item)
+
     def set_goals(self):
         # Default goals are divided into 3 primary categories:
         # Bridge, Ganon's Boss Key, and Trials
@@ -1024,32 +1059,27 @@ class World(object):
         itempool = []
 
         if self.settings.shuffle_mapcompass == 'dungeon':
-            itempool.extend(item for dungeon in self.dungeons for item in dungeon.dungeon_items)
-        elif self.settings.shuffle_mapcompass in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items)
+            itempool.extend([item for dungeon in self.dungeons for item in dungeon.dungeon_items])
+        elif self.settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items])
 
         if self.settings.shuffle_smallkeys == 'dungeon':
-            itempool.extend(item for dungeon in self.dungeons for item in dungeon.small_keys)
-        elif self.settings.shuffle_smallkeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys)
+            itempool.extend([item for dungeon in self.dungeons for item in dungeon.small_keys])
+        elif self.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys])
 
         if self.settings.shuffle_bosskeys == 'dungeon':
-            itempool.extend(item for dungeon in self.dungeons if dungeon.name != 'Ganons Castle' for item in dungeon.boss_key)
-        elif self.settings.shuffle_bosskeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.boss_key)
+            itempool.extend([item for dungeon in self.dungeons if dungeon.name != 'Ganons Castle' for item in dungeon.boss_key])
+        elif self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.boss_key])
 
         if self.settings.shuffle_ganon_bosskey == 'dungeon':
-            itempool.extend(item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key)
+            itempool.extend([item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key])
 
         if self.settings.shuffle_silver_rupees == 'dungeon':
-            itempool.extend(item for dungeon in self.dungeons for item in dungeon.silver_rupees)
-        elif self.settings.shuffle_silver_rupees in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees)
-
-        if self.settings.shuffle_dungeon_rewards == 'dungeon':
-            itempool.extend(item for dungeon in self.dungeons for item in dungeon.reward)
-        elif self.settings.shuffle_dungeon_rewards in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.reward)
+            itempool.extend([item for dungeon in self.dungeons for item in dungeon.silver_rupees])
+        elif self.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'anywhere', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees])
 
         for item in itempool:
             item.world = self
@@ -1059,18 +1089,16 @@ class World(object):
     # get a list of items that don't have to be in their proper dungeon
     def get_unrestricted_dungeon_items(self):
         itempool = []
-        if self.settings.shuffle_mapcompass in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items)
-        if self.settings.shuffle_smallkeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys)
-        if self.settings.shuffle_bosskeys in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if (dungeon.name != 'Ganons Castle' and not self.empty_dungeons[dungeon.name].empty) for item in dungeon.boss_key)
-        if self.settings.shuffle_ganon_bosskey in ('any_dungeon', 'overworld', 'keysanity', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key)
-        if self.settings.shuffle_silver_rupees in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees)
-        if self.settings.shuffle_dungeon_rewards in ('any_dungeon', 'overworld', 'anywhere', 'regional'):
-            itempool.extend(item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.reward)
+        if self.settings.shuffle_mapcompass in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.dungeon_items])
+        if self.settings.shuffle_smallkeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.small_keys])
+        if self.settings.shuffle_bosskeys in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if (dungeon.name != 'Ganons Castle' and not self.empty_dungeons[dungeon.name].empty) for item in dungeon.boss_key])
+        if self.settings.shuffle_ganon_bosskey in ['any_dungeon', 'overworld', 'keysanity', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if dungeon.name == 'Ganons Castle' for item in dungeon.boss_key])
+        if self.settings.shuffle_silver_rupees in ['any_dungeon', 'overworld', 'anywhere', 'regional']:
+            itempool.extend([item for dungeon in self.dungeons if not self.empty_dungeons[dungeon.name].empty for item in dungeon.silver_rupees])
 
         for item in itempool:
             item.world = self
